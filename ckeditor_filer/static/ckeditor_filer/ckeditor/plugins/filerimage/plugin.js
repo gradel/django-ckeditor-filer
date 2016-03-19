@@ -1,11 +1,12 @@
 (function($) {
     CKEDITOR.plugins.add( 'filerimage', {
+        lang: 'en,it,de',
         icons: 'filerimage',
         init: function( editor ) {
             editor.addCommand( 'filerImageDialog', new CKEDITOR.dialogCommand( 'filerImageDialog' ) );
 
             editor.ui.addButton( 'Filer Image', {
-                label: 'Insert filer image',
+                label: 'Bild einfügen',
                 command: 'filerImageDialog',
                 toolbar: 'insert',
                 icon: 'filerimage'
@@ -14,7 +15,7 @@
             if ( editor.contextMenu ) {
                 editor.addMenuGroup( 'Filer' );
                 editor.addMenuItem( 'imageItem', {
-                    label: 'Edit image',
+                    label: 'Bild bearbeiten',
                     icon: this.path + 'icons/filerimage.png',
                     command: 'filerImageDialog',
                     group: 'Filer'

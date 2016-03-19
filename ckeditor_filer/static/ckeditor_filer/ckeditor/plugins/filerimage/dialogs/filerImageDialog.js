@@ -1,6 +1,8 @@
 (function($) {
     CKEDITOR.dialog.add( 'filerImageDialog', function ( editor ) {
         dialog = CKEDITOR.dialog.getCurrent();
+        var lang = editor.lang.filerimage;
+        var commonLang = editor.lang.common;
         var imageWidth = 0;
         var imageHeight = 0;
 
@@ -10,6 +12,7 @@
             thumb_sel_val = dialog.getContentElement("tab-basic", "thumbnail_option").getValue();
             if (thumb_sel_val != 0) {
                 thumb_opt_id = thumb_sel_val + '/';
+                console.log($('#id_image'));
                 server_url = '/ckeditor_filer/url_image/'+ $('#id_image').val() + '/' + thumb_opt_id;
             } else {
                 width = dialog.getContentElement("tab-basic", "width").getValue();
@@ -25,7 +28,8 @@
             });
         }
         return {
-            title: 'Filer Image Properties',
+            title: lang.title,
+            //title: 'Bild',
             minWidth: 400,
             minHeight: 200,
 
@@ -125,7 +129,7 @@
                                         '<img width="16" height="16" alt="Pretraži" src="/static/admin/img/icon_searchbox.png">' +
                                     '</a>' +
                                     '<img width="10" height="10" style="display: none;" title="Očisti" alt="Očisti" src="/static/admin/img/icon_deletelink.gif" id="id_image_clear">' +
-                                    '<br><input type="text" id="id_image" name="image" class="vForeignKeyRawIdAdminField">' +
+                                    '<br><input type="text" id="id_image" data-id="id_image" name="image" class=" vForeignKeyRawIdAdminField">' +
                                 '</div>',
                         },
                         {
