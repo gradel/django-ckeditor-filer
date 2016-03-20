@@ -7,29 +7,33 @@
         var imageHeight = 0;
 
         function getImageUrl() {
-            var url = dialog.getContentElement("tab-basic", "url");
-            var thumb_opt_id = "";
-            thumb_sel_val = dialog.getContentElement("tab-basic", "thumbnail_option").getValue();
-            if (thumb_sel_val != 0) {
-                thumb_opt_id = thumb_sel_val + '/';
-                console.log($('#id_image'));
-                server_url = '/ckeditor_filer/url_image/'+ $('#id_image').val() + '/' + thumb_opt_id;
-            } else {
-                width = dialog.getContentElement("tab-basic", "width").getValue();
-                if (width == "") width = ''; else width += '/';
-                height = dialog.getContentElement("tab-basic", "height").getValue();
-                if (height == "") height = ''; else height += '/';
-                server_url = '/ckeditor_filer/url_image/'+ $('#id_image').val() + '/' + width + height;
+            if ($('#id_image').val()) {
+                var url = dialog.getContentElement("tab-basic", "url");
+                var thumb_opt_id = "";
+                thumb_sel_val = dialog.getContentElement("tab-basic", "thumbnail_option").getValue();
+                if (thumb_sel_val != 0) {
+                    thumb_opt_id = thumb_sel_val + '/';
+                    server_url = '/ckeditor_filer/url_image/'+ $('#id_image').val() + '/' + thumb_opt_id;
+                } else {
+                    width = dialog.getContentElement("tab-basic", "width").getValue();
+                    if (width == "") width = '200/'; else width += '/';
+                    height = dialog.getContentElement("tab-basic", "height").getValue();
+                    if (height == "") height = '200/'; else height += '/';
+                    server_url = '/ckeditor_filer/url_image/'+ $('#id_image').val() + '/' + width + height;
+                }
+                $.get(server_url, function(data) {
+                    url.setValue(data.url);
+                    imageWidth = data.width;
+                    imageHeight = data.height;
+                });
+                preview_url = '/ckeditor_filer/url_image/'+ $('#id_image').val() + '/200/200/';
+                $.get(preview_url, function(data) {
+                    id_image_thumbnail_img.setAttribute('src', data.url);
+                });
             }
-            $.get(server_url, function(data) {
-                url.setValue(data.url);
-                imageWidth = data.width;
-                imageHeight = data.height;
-            });
         }
         return {
             title: lang.title,
-            //title: 'Bild',
             minWidth: 400,
             minHeight: 200,
 
@@ -84,6 +88,8 @@
                 // Store the reference to the <img> element in an internal property, for later use.
                 this.element = element;
 
+                //id_image.setValue(element.getAttribute('filer_id')); null ?
+
                 // Invoke the setup methods of all dialog elements, so they can load the element attributes.
                 if ( !this.insertMode )
                     this.setupContent( this.element );
@@ -116,7 +122,7 @@
             contents: [
                 {
                     id: 'tab-basic',
-                    label: 'Basic Settings',
+                    label: lang.titleBasic,
                     elements: [
                         {
                             type: 'html',
@@ -125,10 +131,13 @@
                                     '<label for="id_image">Image:</label>' +
                                     '<img alt="no file selected" class="quiet" src="/static/filer/icons/nofile_48x48.png" id="id_image_thumbnail_img">' +
                                     '&nbsp;<span id="id_image_description_txt"></span>' +
-                                    '<a onclick="return showRelatedObjectLookupPopup(this);" title="Pretraži" id="lookup_id_image" class="related-lookup" href="' + editor.config.admin_url +'filer/folder/last/?t=file_ptr">' +
+                                    '<a onclick="return showRelatedObjectLookupPopup(this);" title="' + lang.browse +
+                                        '" id="lookup_id_image" class="related-lookup" href="' + editor.config.admin_url +
+                                        'filer/folder/last/?t=file_ptr data-id="id_image">' +
                                         '<img width="16" height="16" alt="Pretraži" src="/static/admin/img/icon_searchbox.png">' +
                                     '</a>' +
-                                    '<img width="10" height="10" style="display: none;" title="Očisti" alt="Očisti" src="/static/admin/img/icon_deletelink.gif" id="id_image_clear">' +
+                                    '<img width="10" height="10" style="display: none;" title="' + lang.clear + '" alt="' + lang.clear +
+                                        '" src="/static/admin/img/icon_deletelink.gif" id="id_image_clear">' +
                                     '<br><input type="text" id="id_image" data-id="id_image" name="image" class=" vForeignKeyRawIdAdminField">' +
                                 '</div>',
                         },
@@ -137,6 +146,9 @@
                             id: 'url',
                             label: 'Url',
                             setup: function( element ) {
+                                // setup on the former element didn't work. so...
+                                jQuery('#id_image').val(element.getAttribute('filer_id'));
+                                // and whats to do here
                                 this.setValue( element.getAttribute( "src" ) );
                             },
                             // Called by the main commitContent call on dialog confirmation.
@@ -147,7 +159,7 @@
                         {
                             type: 'text',
                             id: 'caption',
-                            label: 'Caption',
+                            label: lang.caption,
                             setup: function( element ) {
                                 this.setValue( element.getAttribute( "title" ) );
                             },
@@ -159,7 +171,7 @@
                         {
                             type: 'text',
                             id: 'alt_text',
-                            label: 'Alt',
+                            label: lang.alt,
                             setup: function( element ) {
                                 this.setValue( element.getAttribute( "alt" ) );
                             },
@@ -330,10 +342,10 @@
                             label: 'CSS',
                             setup: function( element ) {
                                 this.setValue( element.getAttribute( "class" ) );
-                            },                            
+                            },
                             commit: function( element ) {
                                 element.setAttribute( "class", this.getValue() );
-                            }                              
+                            }
                         },
                     ]
                 }
