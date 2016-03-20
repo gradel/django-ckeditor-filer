@@ -1,34 +1,49 @@
 (function($) {
+
+    'use strict';
+
     CKEDITOR.dialog.add( 'filerImageDialog', function ( editor ) {
-        dialog = CKEDITOR.dialog.getCurrent();
+        var dialog = CKEDITOR.dialog.getCurrent();
         var lang = editor.lang.filerimage;
         var commonLang = editor.lang.common;
         var imageWidth = 0;
         var imageHeight = 0;
+        var id_image_thumbnail_img;
+        var id_image_description_txt;
+        var thumb_sel_val;
+        var ratio;
+        var server_url;
+        var preview_url;
+        var width;
+        var height;
 
         function getImageUrl() {
             if ($('#id_image').val()) {
                 var url = dialog.getContentElement("tab-basic", "url");
                 var thumb_opt_id = "";
                 thumb_sel_val = dialog.getContentElement("tab-basic", "thumbnail_option").getValue();
-                if (thumb_sel_val != 0) {
+                if (thumb_sel_val !== 0 && thumb_sel_val !== '0' && thumb_sel_val !== '') {
                     thumb_opt_id = thumb_sel_val + '/';
                     server_url = '/ckeditor_filer/url_image/'+ $('#id_image').val() + '/' + thumb_opt_id;
                 } else {
                     width = dialog.getContentElement("tab-basic", "width").getValue();
-                    if (width == "") width = '200/'; else width += '/';
+                    if (!width ) {
+                        width = '200/';
+                    } else {
+                        width += '/';
+                    }
                     height = dialog.getContentElement("tab-basic", "height").getValue();
-                    if (height == "") height = '200/'; else height += '/';
+                    if (!height) {
+                        height = '200/';
+                    } else {
+                        height += '/';
+                    }
                     server_url = '/ckeditor_filer/url_image/'+ $('#id_image').val() + '/' + width + height;
                 }
                 $.get(server_url, function(data) {
                     url.setValue(data.url);
                     imageWidth = data.width;
                     imageHeight = data.height;
-                });
-                preview_url = '/ckeditor_filer/url_image/'+ $('#id_image').val() + '/200/200/';
-                $.get(preview_url, function(data) {
-                    id_image_thumbnail_img.setAttribute('src', data.url);
                 });
             }
         }
@@ -54,10 +69,11 @@
                     id_image.hide();
                 var id_image_clear = document.getById( 'id_image_clear' );
 
+                id_image_thumbnail_img = document.getById( 'id_image_thumbnail_img' );
+
                 id_image_clear.on('click', function () {
                     id_image.setValue("");
                     id_image.removeAttribute("value");
-                    id_image_thumbnail_img = document.getById( 'id_image_thumbnail_img' );
                     id_image_thumbnail_img.setAttribute("src", "/static/filer/icons/nofile_48x48.png");
                     id_image_description_txt = document.getById( 'id_image_description_txt' );
                     id_image_description_txt.setHtml("");
@@ -95,6 +111,14 @@
                     this.setupContent( this.element );
                 else
                     id_image_clear.fire('click');
+
+                // get (larger) preview image
+                if ($('#id_image').val()) {
+                    preview_url = '/ckeditor_filer/url_image/'+ $('#id_image').val() + '/200/200/';
+                    $.get(preview_url, function(data) {
+                        id_image_thumbnail_img.setAttribute('src', data.url);
+                    });
+                }
             },
             // This method is invoked once a user clicks the OK button, confirming the dialog.
             onOk: function() {
@@ -114,6 +138,10 @@
                 // Invoke the commit methods of all dialog elements, so the <img> element gets modified.
                 this.commitContent( img );
 
+                // sometimes ckeditor saves and uses old url probably because the thumbnail url
+                // produced by easy_thumbnail doesn't seem consistently usable (browser replacements...)
+                img.removeAttribute("data-cke-saved-src");
+
                 // Finally, in if insert mode, inserts the element at the editor caret position.
                 if ( this.insertMode )
                     editor.insertElement( img );
@@ -128,7 +156,7 @@
                             type: 'html',
                             html:
                                 '<div class="field-box field-image">' +
-                                    '<label for="id_image">Image:</label>' +
+                                    '<label for="id_image">' + lang.imageLabel + ':</label><br />' +
                                     '<img alt="no file selected" class="quiet" src="/static/filer/icons/nofile_48x48.png" id="id_image_thumbnail_img">' +
                                     '&nbsp;<span id="id_image_description_txt"></span>' +
                                     '<a onclick="return showRelatedObjectLookupPopup(this);" title="' + lang.browse +
@@ -187,13 +215,17 @@
                                 {
                                     type: 'checkbox',
                                     id: 'use_original_image',
-                                    label: 'Use original image',
+                                    label: lang.useOriginal,
                                     setup: function( element ) {
                                         this.setValue( element.getAttribute( "original_image" ) );
                                     },
                                     // Called by the main commitContent call on dialog confirmation.
                                     commit: function( element ) {
-                                        element.setAttribute( "original_image", this.getValue() );
+                                        if (thumb_sel_val === '0') {
+                                            element.setAttribute( "original_image", this.getValue() );
+                                        } else {
+                                            element.setAttribute( "original_image", '' );
+                                        }
                                     }
                                 },
                                 {
@@ -239,9 +271,9 @@
                                 {
                                     type: 'text',
                                     id: 'width',
-                                    label: 'Width',
+                                    label: lang.width,
                                     onChange: function () {
-                                        if (this.getValue() != "") {
+                                        if (this.getValue() !== "") {
                                             ratio = this.getValue() / imageWidth;   // get ratio for scaling image
                                             dialog.getContentElement("tab-basic", "height").setValue(Math.ceil(imageHeight * ratio));
                                         }
@@ -253,13 +285,17 @@
                                     },
                                     // Called by the main commitContent call on dialog confirmation.
                                     commit: function( element ) {
-                                        element.setAttribute( "width", this.getValue() );
+                                        if (thumb_sel_val === '0') {
+                                            element.setAttribute( "width", this.getValue() );
+                                        } else {
+                                            element.setAttribute( "width", '' );
+                                        }
                                     }
                                 },
                                 {
                                     type: 'text',
                                     id: 'height',
-                                    label: 'Height',
+                                    label: lang.height,
                                     onChange: function () {
                                         getImageUrl();
                                     },
@@ -268,7 +304,11 @@
                                     },
                                     // Called by the main commitContent call on dialog confirmation.
                                     commit: function( element ) {
-                                        element.setAttribute( "height", this.getValue() );
+                                        if (thumb_sel_val === '0') {
+                                            element.setAttribute( "height", this.getValue() );
+                                        } else {
+                                            element.setAttribute( "height", '' );
+                                        }
                                     }
                                 },
                             ]
@@ -297,7 +337,7 @@
                         {
                             type: 'select',
                             id: 'alignment',
-                            label : 'Alignment',
+                            label : lang.alignment,
                             items: [ ["left"], ["right"] ],
                             setup: function( element ) {
                                 this.setValue( element.getAttribute( "align" ) );
@@ -314,12 +354,12 @@
                                 {
                                     type: 'checkbox',
                                     id: 'target_blank',
-                                    label: 'Target blank',
+                                    label: lang.targetBlank,
                                 },
                                 {
                                     type: 'checkbox',
                                     id: 'front_image',
-                                    label: 'Front image',
+                                    label: lang.frontImage,
                                     setup: function( element ) {
                                         this.setValue( element.getAttribute( "front_image" ) );
                                     },
@@ -334,7 +374,7 @@
                 },
                 {
                     id: 'tab-adv',
-                    label: 'Advanced Settings',
+                    label: lang.titleAdvanced,
                     elements: [
                         {
                             type: 'text',

@@ -1,8 +1,18 @@
 (function($) {
     CKEDITOR.plugins.add( 'filerimage', {
+
+        onLoad: function() {
+            CKEDITOR.addCss(
+                'input.cke_dialog_ui_input_text {' +
+                    'height: 25px !important;' +
+                '}'
+            );
+        },
+
         lang: 'en,it,de',
         icons: 'filerimage',
         init: function( editor ) {
+            that = this;
             editor.addCommand( 'filerImageDialog', new CKEDITOR.dialogCommand( 'filerImageDialog' ) );
 
             editor.ui.addButton( 'Filer Image', {
@@ -28,7 +38,8 @@
                 });
             }
 
-            CKEDITOR.dialog.add( 'filerImageDialog', this.path + 'dialogs/filerImageDialog.js' );
+            CKEDITOR.scriptLoader.load( '/static/filer/js/addons/popup_handling.js' );
+            CKEDITOR.dialog.add( 'filerImageDialog', that.path + 'dialogs/filerImageDialog.js' );
 
             var dialog = CKEDITOR.dialog.getCurrent();
 
