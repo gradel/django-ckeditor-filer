@@ -162,11 +162,11 @@
                                     '<a onclick="return showRelatedObjectLookupPopup(this);" title="' + lang.browse +
                                         '" id="lookup_id_image" class="related-lookup" href="' + editor.config.admin_url +
                                         'filer/folder/last/?t=file_ptr data-id="id_image">' +
-                                        '<img width="16" height="16" alt="Pretraži" src="/static/admin/img/icon_searchbox.png">' +
+                                        '<img width="16" height="16" alt="' + lang.browse + '" src="/static/admin/img/icon_searchbox.png">' +
                                     '</a>' +
                                     '<img width="10" height="10" style="display: none;" title="' + lang.clear + '" alt="' + lang.clear +
                                         '" src="/static/admin/img/icon_deletelink.gif" id="id_image_clear">' +
-                                    '<br><input type="text" id="id_image" data-id="id_image" name="image" class=" vForeignKeyRawIdAdminField">' +
+                                    '<br><input type="text" id="id_image" data-id="id_image" name="image" class="vForeignKeyRawIdAdminField">' +
                                 '</div>',
                         },
                         {
@@ -175,6 +175,7 @@
                             label: 'Url',
                             setup: function( element ) {
                                 // setup on the former element didn't work. so...
+                                jQuery('#id_image_thumbnail_img').attr('src', element.getAttribute('src'));
                                 jQuery('#id_image').val(element.getAttribute('filer_id'));
                                 // and whats to do here
                                 this.setValue( element.getAttribute( "src" ) );
@@ -285,11 +286,7 @@
                                     },
                                     // Called by the main commitContent call on dialog confirmation.
                                     commit: function( element ) {
-                                        if (thumb_sel_val === '0') {
-                                            element.setAttribute( "width", this.getValue() );
-                                        } else {
-                                            element.setAttribute( "width", '' );
-                                        }
+                                        element.setAttribute( "width", this.getValue() );
                                     }
                                 },
                                 {
@@ -304,11 +301,7 @@
                                     },
                                     // Called by the main commitContent call on dialog confirmation.
                                     commit: function( element ) {
-                                        if (thumb_sel_val === '0') {
-                                            element.setAttribute( "height", this.getValue() );
-                                        } else {
-                                            element.setAttribute( "height", '' );
-                                        }
+                                        element.setAttribute( "height", this.getValue() );
                                     }
                                 },
                             ]
