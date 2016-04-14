@@ -1,3 +1,9 @@
+// django.jquery isn't available when editing in the frontend
+if (typeof django !== 'undefined') {
+    var jqy = django.jQuery;
+} else {
+    var jqy = jQuery;
+}
 (function($) {
 
     'use strict';
@@ -385,4 +391,4 @@
             ]
         };
     });
-})(django.jQuery);
+})(jqy);
