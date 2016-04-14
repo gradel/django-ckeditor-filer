@@ -357,20 +357,20 @@ CKEDITOR.dialog.add( 'link', function( editor ) {
 				type: 'vbox',
 				id: 'urlOptions',
 				children: [
-					{
-                        type: 'html',
-                        html:
-                            '<div class="field-box field-file">' +
-                                '<label for="id_file">File:</label>' +
-                                '<img alt="no file selected" class="quiet" src="/static/filer/icons/nofile_48x48.png" id="id_file_thumbnail_img">' +
-                                '&nbsp;<span id="id_file_description_txt"></span>' +
-                                '<a onclick="return showRelatedObjectLookupPopup(this);" title="Pretraži" id="lookup_id_file" class="related-lookup" href="/admin/filer/folder/last/?t=file_ptr">' +
-                                    '<img width="16" height="16" alt="Pretraži" src="/static/admin/img/icon_searchbox.png">' +
-                                '</a>' +
-                                '<img width="10" height="10" style="display: none;" title="Očisti" alt="Očisti" src="/static/admin/img/icon_deletelink.gif" id="id_file_clear">' +
-                                '<br><input type="hidden" id="id_file" name="file" class="vForeignKeyRawIdAdminField">' +
-                            '</div>',
-                    },
+                                        {
+                                        type: 'html',
+                                        html:
+                                            '<div class="field-box field-file">' +
+                                                '<label for="id_file">File:</label>' +
+                                                '<img alt="no file selected" class="quiet" src="/static/filer/icons/nofile_48x48.png" id="id_file_thumbnail_img">' +
+                                                '&nbsp;<span id="id_file_description_txt"></span>' +
+                                                '<a onclick="return showRelatedObjectLookupPopup(this);" title="Pretraži" id="lookup_id_file" class="related-lookup" href="/admin/filer/folder/last/?t=file_ptr">' +
+                                                    '<img width="16" height="16" alt="Pretraži" src="/static/admin/img/icon_searchbox.png">' +
+                                                '</a>' +
+                                                '<img width="10" height="10" style="display: none;" title="Očisti" alt="Očisti" src="/static/admin/img/icon_deletelink.gif" id="id_file_clear">' +
+                                                '<br><input type="hidden" id="id_file" name="file" class="vForeignKeyRawIdAdminField">' +
+                                            '</div>',
+                                        },
 					{
 					type: 'hbox',
 					widths: [ '25%', '75%' ],
