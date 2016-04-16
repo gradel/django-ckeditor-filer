@@ -53,6 +53,18 @@ if (typeof django !== 'undefined') {
                 });
             }
         }
+        function getThumbnail() {
+            // get (larger) preview image
+            dialog = CKEDITOR.dialog.getCurrent();
+            var document = dialog.getElement().getDocument();
+            var id_image_thumbnail_img = document.getById( 'id_image_thumbnail_img' );
+            if ($('#id_image').val()) {
+                var preview_url = '/ckeditor_filer/url_image/'+ $('#id_image').val() + '/200/200/';
+                $.get(preview_url, function(data) {
+                    id_image_thumbnail_img.setAttribute('src', data.url);
+                });
+            }
+        }
         return {
             title: lang.title,
             minWidth: 400,
@@ -69,6 +81,7 @@ if (typeof django !== 'undefined') {
                     if (oldVal != id_image.getValue()) {
                         oldVal = id_image.getValue();
                         getImageUrl();
+                        getThumbnail();
                     }
                 }, 1000);
                 if ( id_image )
@@ -119,12 +132,13 @@ if (typeof django !== 'undefined') {
                     id_image_clear.fire('click');
 
                 // get (larger) preview image
-                if ($('#id_image').val()) {
-                    preview_url = '/ckeditor_filer/url_image/'+ $('#id_image').val() + '/200/200/';
-                    $.get(preview_url, function(data) {
-                        id_image_thumbnail_img.setAttribute('src', data.url);
-                    });
-                }
+                //if ($('#id_image').val()) {
+                    //var preview_url = '/ckeditor_filer/url_image/'+ $('#id_image').val() + '/200/200/';
+                    //$.get(preview_url, function(data) {
+                        //id_image_thumbnail_img.setAttribute('src', data.url);
+                    //});
+                //}
+                getThumbnail();
             },
             // This method is invoked once a user clicks the OK button, confirming the dialog.
             onOk: function() {
@@ -160,19 +174,20 @@ if (typeof django !== 'undefined') {
                     elements: [
                         {
                             type: 'html',
+                            id: 'filerWidget',
                             html:
                                 '<div class="field-box field-image">' +
                                     '<label for="id_image">' + lang.imageLabel + ':</label><br />' +
                                     '<img alt="no file selected" class="quiet" src="/static/filer/icons/nofile_48x48.png" id="id_image_thumbnail_img">' +
-                                    '&nbsp;<span id="id_image_description_txt"></span>' +
-                                    '<a onclick="return showRelatedObjectLookupPopup(this);" title="' + lang.browse +
+                                    '<br /><span id="id_image_description_txt"></span>' +
+                                    '<br /><a style="margin:10px;" onclick="return showRelatedObjectLookupPopup(this);" title="' + lang.browse +
                                         '" id="lookup_id_image" class="related-lookup" href="' + editor.config.admin_url +
                                         'filer/folder/last/?t=file_ptr data-id="id_image">' +
-                                        '<img width="16" height="16" alt="' + lang.browse + '" src="/static/admin/img/icon_searchbox.png">' +
+                                        '<img width="30" height="30" alt="' + lang.browse + '" src="/static/admin/img/icon_searchbox.png">' +
                                     '</a>' +
-                                    '<img width="10" height="10" style="display: none;" title="' + lang.clear + '" alt="' + lang.clear +
+                                    '<br /><img width="20" height="20"  style="margin:10px;" title="' + lang.clear + '" alt="' + lang.clear +
                                         '" src="/static/admin/img/icon_deletelink.gif" id="id_image_clear">' +
-                                    '<br><input type="text" id="id_image" data-id="id_image" name="image" class="vForeignKeyRawIdAdminField">' +
+                                    '<br /><input type="text" id="id_image" data-id="id_image" name="image" class="vForeignKeyRawIdAdminField">' +
                                 '</div>',
                         },
                         {
@@ -181,7 +196,6 @@ if (typeof django !== 'undefined') {
                             label: 'Url',
                             setup: function( element ) {
                                 // setup on the former element didn't work. so...
-                                jQuery('#id_image_thumbnail_img').attr('src', element.getAttribute('src'));
                                 jQuery('#id_image').val(element.getAttribute('filer_id'));
                                 // and whats to do here
                                 this.setValue( element.getAttribute( "src" ) );
