@@ -177,17 +177,19 @@ if (typeof django !== 'undefined') {
                             id: 'filerWidget',
                             html:
                                 '<div class="field-box field-image">' +
-                                    '<label for="id_image">' + lang.imageLabel + ':</label><br />' +
+                                    '<label for="id_image"><b>' + lang.imageLabel + ':</b></label><br />' +
                                     '<img alt="no file selected" class="quiet" src="/static/filer/icons/nofile_48x48.png" id="id_image_thumbnail_img">' +
-                                    '<br /><span id="id_image_description_txt"></span>' +
-                                    '<br /><a style="margin:10px;" onclick="return showRelatedObjectLookupPopup(this);" title="' + lang.browse +
-                                        '" id="lookup_id_image" class="related-lookup" href="' + editor.config.admin_url +
-                                        'filer/folder/last/?t=file_ptr data-id="id_image">' +
-                                        '<img width="30" height="30" alt="' + lang.browse + '" src="/static/admin/img/icon_searchbox.png">' +
-                                    '</a>' +
-                                    '<br /><img width="20" height="20"  style="margin:10px;" title="' + lang.clear + '" alt="' + lang.clear +
-                                        '" src="/static/admin/img/icon_deletelink.gif" id="id_image_clear">' +
-                                    '<br /><input type="text" id="id_image" data-id="id_image" name="image" class="vForeignKeyRawIdAdminField">' +
+                                    '<div style="margin:10px 0 10px 0;"><b>' + lang.imageName + ': <span id="id_image_description_txt"></span></b></div>' +
+                                    '<div style="margin-bottom:20px;">' +
+                                        '<a style="margin:10px;" onclick="return showRelatedObjectLookupPopup(this);" title="' + lang.browse +
+                                            '" id="lookup_id_image" class="related-lookup" href="' + editor.config.admin_url +
+                                            'filer/folder/last/?t=file_ptr data-id="id_image">' +
+                                            '<img width="30" height="30" alt="' + lang.browse + '" src="/static/admin/img/icon_searchbox.png">' +
+                                        '</a>' +
+                                        '<img width="20" height="20"  style="margin-left:20px;" title="' + lang.clear + '" alt="' + lang.clear +
+                                            '" src="/static/admin/img/icon_deletelink.gif" id="id_image_clear">' +
+                                    '</div>' +
+                                    '<input type="text" id="id_image" data-id="id_image" name="image" class="vForeignKeyRawIdAdminField">' +
                                 '</div>',
                         },
                         {

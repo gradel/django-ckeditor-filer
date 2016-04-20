@@ -5,6 +5,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 CKEDITOR.plugins.setLang( 'filerimage', 'de', {
     imageLabel: 'Bild',
     name: 'Bild einfügen',
+    imageName: 'Bildname',
     edit: 'Bild bearbeiten',
     title: 'Bildeigenschaften',
     titleBasic: 'Grundeinstellungen',
