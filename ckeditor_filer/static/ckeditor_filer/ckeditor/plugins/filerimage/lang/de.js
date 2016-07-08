@@ -14,7 +14,7 @@ CKEDITOR.plugins.setLang( 'filerimage', 'de', {
     browse: 'auswählen',
     clear: 'Entfernen',
     url: 'URL',
-    caption: 'Bildunterschrift',
+    caption: 'Tooltip (title)',
     useOriginal: 'Originalbild verwenden',
     crop: 'Zuschneiden',
     upscale: 'Vergrößern',
@@ -24,5 +24,6 @@ CKEDITOR.plugins.setLang( 'filerimage', 'de', {
     targetBlank: 'In neuem Tab öffnen',
     alignment: 'Ausrichtung',
     height: 'Höhe',
-    width: 'Breite'
+    width: 'Breite',
+    thumbnail_option: 'Thumbnail Variante'
 } );

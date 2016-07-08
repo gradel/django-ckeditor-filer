@@ -238,24 +238,22 @@ if (typeof django !== 'undefined') {
                             widths: [ '50%', '50%', ],
                             children: [
                                 {
-                                    type: 'checkbox',
-                                    id: 'use_original_image',
-                                    label: lang.useOriginal,
+                                    type: 'select',
+                                    id: 'alignment',
+                                    label : lang.alignment,
+                                    items: [ ["left"], ["right"] ],
                                     setup: function( element ) {
-                                        this.setValue( element.getAttribute( "original_image" ) );
+                                        this.setValue( element.getAttribute( "align" ) );
                                     },
                                     // Called by the main commitContent call on dialog confirmation.
                                     commit: function( element ) {
-                                        if (thumb_sel_val === '0') {
-                                            element.setAttribute( "original_image", this.getValue() );
-                                        } else {
-                                            element.setAttribute( "original_image", '' );
-                                        }
+                                        element.setAttribute( "align", this.getValue() );
                                     }
                                 },
                                 {
                                     type: 'select',
                                     id: 'thumbnail_option',
+                                    label: lang.thumbnail_option,
                                     items : [ ['--- Thumbnail ---',0] ],
                                     onLoad : function() {
                                         var element_id = '#' + this.getInputElement().$.id;
@@ -328,63 +326,6 @@ if (typeof django !== 'undefined') {
                                         element.setAttribute( "height", this.getValue() );
                                     }
                                 },
-                            ]
-                        },
-                        {
-                            type: 'hbox',
-                            widths: [ '33%', '33%', '33%' ],
-                            children: [
-                                {
-                                    type: 'checkbox',
-                                    id: 'crop',
-                                    label: 'Crop',
-                                },
-                                {
-                                    type: 'checkbox',
-                                    id: 'upscale',
-                                    label: 'Upscale',
-                                },
-                                {
-                                    type: 'checkbox',
-                                    id: 'use_autoscale',
-                                    label: 'Autoscale',
-                                },
-                            ]
-                        },
-                        {
-                            type: 'select',
-                            id: 'alignment',
-                            label : lang.alignment,
-                            items: [ ["left"], ["right"] ],
-                            setup: function( element ) {
-                                this.setValue( element.getAttribute( "align" ) );
-                            },
-                            // Called by the main commitContent call on dialog confirmation.
-                            commit: function( element ) {
-                                element.setAttribute( "align", this.getValue() );
-                            }
-                        },
-                        {
-                            type: 'hbox',
-                            widths: [ '33%', '33%', '33%' ],
-                            children: [
-                                {
-                                    type: 'checkbox',
-                                    id: 'target_blank',
-                                    label: lang.targetBlank,
-                                },
-                                {
-                                    type: 'checkbox',
-                                    id: 'front_image',
-                                    label: lang.frontImage,
-                                    setup: function( element ) {
-                                        this.setValue( element.getAttribute( "front_image" ) );
-                                    },
-                                    // Called by the main commitContent call on dialog confirmation.
-                                    commit: function( element ) {
-                                        element.setAttribute( "front_image", this.getValue() );
-                                    }
-                                }
                             ]
                         },
                     ]
