@@ -235,26 +235,40 @@ if (typeof django !== 'undefined') {
                         },
                         {
                             type: 'hbox',
-                            widths: [ '50%', '50%', ],
+                            widths: ['50%', '50%',],
                             children: [
                                 {
                                     type: 'select',
                                     id: 'alignment',
                                     label : lang.alignment,
-                                    items: [ ["left"], ["right"] ],
-                                    setup: function( element ) {
-                                        this.setValue( element.getAttribute( "align" ) );
+                                    items: [[lang.no_align], [lang.left], [lang.right]],
+                                    setup: function(element) {
+                                        var selected = element.getAttribute("align");
+                                        if (selected === 'left') {
+                                            this.setValue(lang.left);
+                                        } else if (selected === 'right') {
+                                            this.setValue(lang.right);
+                                        } else {
+                                            this.setValue(lang.no_align);
+                                        }
                                     },
                                     // Called by the main commitContent call on dialog confirmation.
-                                    commit: function( element ) {
-                                        element.setAttribute( "align", this.getValue() );
+                                    commit: function(element) {
+                                        var selected = this.getValue();
+                                        if (selected === lang.left) {
+                                            element.setAttribute("align", 'left');
+                                        } else if (selected === lang.right) {
+                                            element.setAttribute("align", 'right');
+                                        } else {
+                                            element.setAttribute("align", '');
+                                        }
                                     }
                                 },
                                 {
                                     type: 'select',
                                     id: 'thumbnail_option',
                                     label: lang.thumbnail_option,
-                                    items : [ ['--- Thumbnail ---',0] ],
+                                    items : [['--- Thumbnail ---',0]],
                                     onLoad : function() {
                                         var element_id = '#' + this.getInputElement().$.id;
                                         $.ajax({

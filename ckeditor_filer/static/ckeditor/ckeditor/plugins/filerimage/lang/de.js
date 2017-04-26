@@ -25,5 +25,8 @@ CKEDITOR.plugins.setLang( 'filerimage', 'de', {
     alignment: 'Ausrichtung',
     height: 'Höhe',
     width: 'Breite',
-    thumbnail_option: 'Thumbnail Variante'
+    thumbnail_option: 'Thumbnail Variante',
+    no_align: 'Keine',
+    left: 'links',
+    right: 'rechts'
 } );
